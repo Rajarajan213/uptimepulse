@@ -102,53 +102,61 @@ export default function DashboardPage() {
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       {/* Header */}
       <header style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)', padding: '0 32px', position: 'sticky', top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Activity size={18} color="white" />
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #0ea5e9, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(14,165,233,0.3)' }}>
+              <Activity size={20} color="white" />
             </div>
-            <span style={{ fontSize: 18, fontWeight: 700 }}>Uptime<span className="gradient-text">Pulse</span></span>
+            <span style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px' }}>Uptime<span className="gradient-text">Pulse</span></span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{userEmail}</span>
-            <button id="refresh-btn" onClick={handleRefresh} className="btn-secondary" style={{ padding: '8px 12px' }}>
-              <RefreshCw size={14} style={{ animation: refreshing ? 'spin-slow 0.8s linear infinite' : 'none' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 100, border: '1px solid var(--border)' }}>
+              <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{userEmail}</span>
+            </div>
+            <button id="refresh-btn" onClick={handleRefresh} className="btn-secondary" style={{ padding: '10px', borderRadius: 12 }} title="Refresh Data">
+              <RefreshCw size={16} style={{ animation: refreshing ? 'spin-slow 0.8s linear infinite' : 'none' }} />
             </button>
-            <button id="add-monitor-btn" className="btn-primary" onClick={() => setShowAdd(true)}>
-              <Plus size={16} /> Add Monitor
+            <button id="add-monitor-btn" className="btn-primary" onClick={() => setShowAdd(true)} style={{ borderRadius: 12 }}>
+              <Plus size={18} /> Add Site
             </button>
-            <button onClick={handleLogout} className="btn-secondary" style={{ padding: '8px 12px' }}>
-              <LogOut size={14} />
+            <button onClick={handleLogout} className="btn-secondary" style={{ padding: '10px', borderRadius: 12 }} title="Log out">
+              <LogOut size={16} />
             </button>
           </div>
         </div>
       </header>
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '32px' }}>
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 32px' }}>
+        
+        <div style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.5px' }}>Here's how things look today 👋</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 16, fontWeight: 300 }}>A quick overview of all the places we're watching for you.</p>
+        </div>
+
         {/* Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, marginBottom: 48 }}>
           {[
-            { label: 'Total Monitors', value: monitors.length, icon: <Globe size={20} />, color: '#3b82f6' },
-            { label: 'Services Up', value: upCount, icon: <Activity size={20} />, color: '#22c55e' },
-            { label: 'Services Down', value: downCount, icon: <Zap size={20} />, color: '#ef4444' },
-            { label: 'Avg Uptime (24h)', value: avgUptime !== null ? `${avgUptime}%` : 'N/A', icon: <TrendingUp size={20} />, color: '#8b5cf6' },
+            { label: 'Sites Monitored', value: monitors.length, icon: <Globe size={22} />, color: '#0ea5e9' },
+            { label: 'All Good', value: upCount, icon: <Activity size={22} />, color: '#10b981' },
+            { label: 'Needs Attention', value: downCount, icon: <Zap size={22} />, color: '#f43f5e' },
+            { label: 'Avg Uptime (24h)', value: avgUptime !== null ? `${avgUptime}%` : '—', icon: <TrendingUp size={22} />, color: '#8b5cf6' },
           ].map((stat) => (
-            <div key={stat.label} className="card" style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: `${stat.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: stat.color, flexShrink: 0 }}>
+            <div key={stat.label} className="card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{ width: 52, height: 52, borderRadius: 16, background: `${stat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: stat.color, flexShrink: 0 }}>
                 {stat.icon}
               </div>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>{loading && typeof stat.value === 'number' ? '—' : stat.value}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{stat.label}</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{loading && typeof stat.value === 'number' ? '—' : stat.value}</div>
+                <div style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 500 }}>{stat.label}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Monitors Grid */}
-        <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700 }}>Monitors</h2>
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Auto-refreshes every 30s</span>
+        <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px' }}>Your Monitored Sites</h2>
+          <span style={{ fontSize: 13, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 100, color: 'var(--text-muted)', fontWeight: 500 }}>Auto-refreshes every 30s</span>
         </div>
 
         {loading ? (
@@ -182,70 +190,69 @@ export default function DashboardPage() {
           </div>
         )}
         {/* AI Features Section */}
-        <div style={{ marginTop: 48 }}>
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-blue)', animation: 'glow-pulse 2s infinite' }} />
-              <h2 style={{ fontSize: 20, fontWeight: 800 }}>🚀 AI-Powered Features</h2>
-              <span style={{ fontSize: 11, background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2))', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 6, padding: '2px 8px', color: 'var(--accent-blue)', fontWeight: 700 }}>NEW</span>
+        <div style={{ marginTop: 64 }}>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent-blue)', animation: 'glow-pulse 2.5s infinite' }} />
+              <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.5px' }}>✨ Intelligence Hub</h2>
             </div>
-            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Intelligent reliability tools that go beyond simple uptime checking</p>
+            <p style={{ fontSize: 15, color: 'var(--text-muted)' }}>Tools that go beyond basic uptime to keep your services running smoothly.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
             {[
               {
                 href: '/dashboard/ai-healing',
-                icon: <Shield size={22} />,
-                gradient: 'linear-gradient(135deg, #22c55e20, #16a34a10)',
-                border: 'rgba(34,197,94,0.25)',
-                iconBg: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                icon: <Shield size={24} />,
+                gradient: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.03))',
+                border: 'rgba(16,185,129,0.2)',
+                iconBg: 'linear-gradient(135deg, #10b981, #059669)',
                 title: 'AI Self-Healing System',
-                desc: 'Auto-remediation engine that detects failures and triggers healing actions — cache purge, DNS failover, service restart.',
-                badge: '🟢 Active',
-                badgeColor: '#22c55e',
+                desc: 'Your automated assistant. Detects failures and triggers automatic fixes like cache purges or DNS failovers.',
+                badge: 'Active Supervisor',
+                badgeColor: '#10b981',
               },
               {
                 href: '/dashboard/digital-twin',
-                icon: <Cpu size={22} />,
-                gradient: 'linear-gradient(135deg, #3b82f620, #06b6d410)',
-                border: 'rgba(59,130,246,0.25)',
-                iconBg: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                icon: <Cpu size={24} />,
+                gradient: 'linear-gradient(135deg, rgba(14,165,233,0.08), rgba(99,102,241,0.03))',
+                border: 'rgba(14,165,233,0.2)',
+                iconBg: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
                 title: 'Digital Twin Simulation',
-                desc: 'Live SVG infrastructure map with animated data flows. Visualize CDN, API, DB, Auth health in real time.',
-                badge: '🔵 Live',
-                badgeColor: '#3b82f6',
+                desc: 'A live architectural map of your setup. Watch data flow and instantly spot where bottlenecks are happening.',
+                badge: 'Live Map',
+                badgeColor: '#0ea5e9',
               },
               {
                 href: '/dashboard/rum',
-                icon: <Users size={22} />,
-                gradient: 'linear-gradient(135deg, #8b5cf620, #ec489910)',
-                border: 'rgba(139,92,246,0.25)',
+                icon: <Users size={24} />,
+                gradient: 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(236,72,153,0.03))',
+                border: 'rgba(139,92,246,0.2)',
                 iconBg: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
                 title: 'Real User Monitoring',
-                desc: 'Core Web Vitals (LCP, FID, CLS), geographic sessions, browser breakdown, and 24h load timeline.',
-                badge: '👥 RUM',
+                desc: 'See exactly what your users feel. Track Core Web Vitals, load times, and geographic distribution seamlessly.',
+                badge: 'User Experience',
                 badgeColor: '#8b5cf6',
               },
               {
                 href: '/dashboard/risk-score',
-                icon: <AlertTriangle size={22} />,
-                gradient: 'linear-gradient(135deg, #ef444420, #f59e0b10)',
-                border: 'rgba(239,68,68,0.25)',
-                iconBg: 'linear-gradient(135deg, #ef4444, #f59e0b)',
+                icon: <AlertTriangle size={24} />,
+                gradient: 'linear-gradient(135deg, rgba(244,63,94,0.08), rgba(245,158,11,0.03))',
+                border: 'rgba(244,63,94,0.2)',
+                iconBg: 'linear-gradient(135deg, #f43f5e, #f59e0b)',
                 title: 'AI Website Risk Score',
-                desc: 'AI-computed 0–100 risk score per monitor. Breakdown by uptime, response time, incident frequency, and trend.',
-                badge: '⚠️ AI',
-                badgeColor: '#ef4444',
+                desc: 'A unified health grade from 0-100. We analyze volatility and trends so you know exactly where you stand.',
+                badge: 'Health Grade',
+                badgeColor: '#f43f5e',
               },
               {
                 href: '/dashboard/failure-map',
-                icon: <GitFork size={22} />,
-                gradient: 'linear-gradient(135deg, #ef444420, #8b5cf610)',
-                border: 'rgba(139,92,246,0.25)',
-                iconBg: 'linear-gradient(135deg, #ef4444, #8b5cf6)',
+                icon: <GitFork size={24} />,
+                gradient: 'linear-gradient(135deg, rgba(244,63,94,0.08), rgba(139,92,246,0.03))',
+                border: 'rgba(139,92,246,0.2)',
+                iconBg: 'linear-gradient(135deg, #f43f5e, #8b5cf6)',
                 title: 'Failure Propagation Map',
-                desc: 'Interactive graph showing how failures cascade across dependent services. Click any node to see blast radius.',
-                badge: '💥 Cascade',
+                desc: 'See the blast radius of any outage. Click a service to instantly see what else might be affected downstream.',
+                badge: 'Cascade Analysis',
                 badgeColor: '#8b5cf6',
               },
             ].map(f => (

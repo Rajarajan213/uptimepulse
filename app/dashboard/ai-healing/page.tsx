@@ -62,42 +62,42 @@ export default function AISelfHealingPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       <header style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)', padding: '0 32px', position: 'sticky', top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1300, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 13 }}>
-              <ArrowLeft size={14} /> Dashboard
+        <div style={{ maxWidth: 1300, margin: '0 auto', height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
+              <ArrowLeft size={16} /> Dashboard
             </Link>
-            <div style={{ width: 1, height: 18, background: 'var(--border)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #22c55e, #16a34a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Shield size={16} color="white" />
+            <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #10b981, #22c55e)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)' }}>
+                <Shield size={20} color="white" />
               </div>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>AI Self-Healing System</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Automated remediation engine</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>AI Self-Healing System</div>
+                <div style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>Automated remediation engine</div>
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', animation: 'glow-pulse 2s infinite' }} />
-            <span style={{ fontSize: 12, color: '#22c55e', fontWeight: 600 }}>ENGINE ACTIVE</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(16,185,129,0.1)', padding: '6px 14px', borderRadius: 100, border: '1px solid rgba(16,185,129,0.2)' }}>
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10b981', animation: 'glow-pulse 2s infinite', boxShadow: '0 0 10px rgba(16,185,129,0.6)' }} />
+            <span style={{ fontSize: 13, color: '#10b981', fontWeight: 800, letterSpacing: '0.05em' }}>ENGINE ACTIVE</span>
           </div>
         </div>
       </header>
 
-      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '32px' }}>
+      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '40px 32px' }}>
         {/* Info banner */}
-        <div style={{ background: 'linear-gradient(135deg, rgba(34,197,94,0.08), rgba(59,130,246,0.08))', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 16, padding: '20px 24px', marginBottom: 28, display: 'flex', gap: 20 }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(34,197,94,0.06), rgba(59,130,246,0.06))', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 24, padding: '28px 32px', marginBottom: 32, display: 'flex', gap: 24, boxShadow: '0 8px 32px rgba(0,0,0,0.05)' }}>
           {[
             { icon: '🔍', label: 'Detect', desc: 'AI monitors response time spikes & failure patterns' },
             { icon: '⚡', label: 'Diagnose', desc: 'Root cause analysis across DNS, CDN, DB, App layers' },
             { icon: '🔧', label: 'Remediate', desc: 'Automated healing actions triggered within seconds' },
             { icon: '✅', label: 'Verify', desc: 'Continuous health checks confirm restoration' },
           ].map(step => (
-            <div key={step.label} style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ fontSize: 24, marginBottom: 6 }}>{step.icon}</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>{step.label}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.5 }}>{step.desc}</div>
+            <div key={step.label} style={{ flex: 1, textAlign: 'center', background: 'var(--bg-card)', padding: '20px', borderRadius: 20, boxShadow: '0 4px 16px rgba(0,0,0,0.05)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 28, marginBottom: 12 }}>{step.icon}</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6, letterSpacing: '-0.3px' }}>{step.label}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>{step.desc}</div>
             </div>
           ))}
         </div>

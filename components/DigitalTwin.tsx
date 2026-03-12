@@ -87,7 +87,7 @@ function buildInfraFromMonitors(monitors: Array<{ id: string; name: string; url:
 }
 
 function getNodeColor(node: InfraNode): string {
-  if (node.status === 'down') return '#ef4444'
+  if (node.status === 'down') return '#f43f5e'
   if (node.status === 'degraded') return '#f59e0b'
   return nodeColors[node.type]
 }
@@ -111,17 +111,17 @@ export default function DigitalTwin({ monitors }: { monitors: Array<{ id: string
   const W = 720, H = 420
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20, alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24, alignItems: 'start' }}>
       {/* SVG canvas */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 12, left: 16, fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', zIndex: 2 }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24, overflow: 'hidden', position: 'relative', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
+        <div style={{ position: 'absolute', top: 16, left: 20, fontSize: 13, color: 'var(--text-primary)', fontWeight: 800, letterSpacing: '-0.3px', zIndex: 2 }}>
           Live Infrastructure Map
         </div>
         <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
           <defs>
             {infra.nodes.map(n => (
               <radialGradient key={n.id} id={`grad-${n.id}`} cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor={getNodeColor(n)} stopOpacity="0.3" />
+                <stop offset="0%" stopColor={getNodeColor(n)} stopOpacity="0.4" />
                 <stop offset="100%" stopColor={getNodeColor(n)} stopOpacity="0.05" />
               </radialGradient>
             ))}
@@ -139,14 +139,15 @@ export default function DigitalTwin({ monitors }: { monitors: Array<{ id: string
             return (
               <g key={`${edge.from}-${edge.to}`}>
                 <line x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-                  stroke={edgeDown ? '#ef444440' : 'rgba(255,255,255,0.08)'}
-                  strokeWidth={edgeDown ? 2 : 1.5}
-                  strokeDasharray={edgeDown ? '6 4' : 'none'}
+                  stroke={edgeDown ? 'rgba(244, 63, 94, 0.4)' : 'rgba(255,255,255,0.06)'}
+                  strokeWidth={edgeDown ? 3 : 2}
+                  strokeDasharray={edgeDown ? '6 6' : 'none'}
                 />
                 {/* Animated packet */}
-                <circle cx={px} cy={py} r={edgeDown ? 2.5 : 3}
-                  fill={edgeDown ? '#ef4444' : nodeColors[infra.nodes.find(n => n.id === edge.from)?.type || 'api']}
-                  opacity={edgeDown ? 0.6 : 0.9}
+                <circle cx={px} cy={py} r={edgeDown ? 3 : 3.5}
+                  fill={edgeDown ? '#f43f5e' : nodeColors[infra.nodes.find(n => n.id === edge.from)?.type || 'api']}
+                  opacity={edgeDown ? 0.7 : 0.9}
+                  style={{ transition: 'cx 1.2s linear, cy 1.2s linear' }}
                 />
               </g>
             )
@@ -157,36 +158,38 @@ export default function DigitalTwin({ monitors }: { monitors: Array<{ id: string
             const color = getNodeColor(node)
             const isSelected = selected?.id === node.id
             return (
-              <g key={node.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(node)}>
+              <g key={node.id} style={{ cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => setSelected(node)}>
                 {/* Glow */}
-                <circle cx={node.x} cy={node.y} r={40}
+                <circle cx={node.x} cy={node.y} r={isSelected ? 50 : 42}
                   fill={`url(#grad-${node.id})`}
+                  style={{ transition: 'r 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}
                 />
                 {/* Ring */}
                 {node.status === 'down' && (
-                  <circle cx={node.x} cy={node.y} r={32}
-                    fill="none" stroke="#ef4444" strokeWidth={2} opacity={0.5 + Math.sin(tick * 0.5) * 0.5}
+                  <circle cx={node.x} cy={node.y} r={34}
+                    fill="none" stroke="#f43f5e" strokeWidth={3} opacity={0.6 + Math.sin(tick * 0.5) * 0.4}
                   />
                 )}
                 {/* Main circle */}
-                <circle cx={node.x} cy={node.y} r={24}
-                  fill={`${color}22`}
-                  stroke={isSelected ? 'white' : color}
-                  strokeWidth={isSelected ? 2.5 : 2}
+                <circle cx={node.x} cy={node.y} r={26}
+                  fill={`${color}2A`}
+                  stroke={isSelected ? '#ffffff' : color}
+                  strokeWidth={isSelected ? 3 : 2.5}
+                  style={{ transition: 'stroke 0.3s, fill 0.3s' }}
                 />
                 {/* Icon */}
-                <text x={node.x} y={node.y - 4} textAnchor="middle" fontSize={16} dominantBaseline="central">
+                <text x={node.x} y={node.y - 4} textAnchor="middle" fontSize={18} dominantBaseline="central">
                   {nodeIcons[node.type]}
                 </text>
                 {/* Label */}
-                <text x={node.x} y={node.y + 36} textAnchor="middle" fontSize={10} fill="rgba(255,255,255,0.75)" fontWeight="600">
+                <text x={node.x} y={node.y + 40} textAnchor="middle" fontSize={11} fill="rgba(255,255,255,0.8)" fontWeight="700">
                   {node.label}
                 </text>
                 {/* Health pill */}
-                <rect x={node.x - 18} y={node.y + 46} width={36} height={12} rx={6}
-                  fill={`${color}30`} stroke={`${color}60`} strokeWidth={1}
+                <rect x={node.x - 20} y={node.y + 48} width={40} height={14} rx={7}
+                  fill={`${color}2A`} stroke={`${color}50`} strokeWidth={1}
                 />
-                <text x={node.x} y={node.y + 52} textAnchor="middle" fontSize={8} fill={color} fontWeight="700" dominantBaseline="central">
+                <text x={node.x} y={node.y + 55} textAnchor="middle" fontSize={9} fill={color} fontWeight="800" dominantBaseline="central">
                   {node.health}%
                 </text>
               </g>
@@ -196,67 +199,75 @@ export default function DigitalTwin({ monitors }: { monitors: Array<{ id: string
       </div>
 
       {/* Node details sidebar */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {selected ? (
-          <div style={{ background: 'var(--bg-card)', border: `1px solid ${getNodeColor(selected)}40`, borderRadius: 14, padding: 18 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <span style={{ fontSize: 24 }}>{nodeIcons[selected.type]}</span>
+          <div style={{ background: 'var(--bg-card)', border: `1px solid ${getNodeColor(selected)}40`, borderRadius: 20, padding: 24, boxShadow: `0 8px 32px ${getNodeColor(selected)}10` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+              <span style={{ fontSize: 28 }}>{nodeIcons[selected.type]}</span>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700 }}>{selected.label}</div>
-                <div style={{ fontSize: 11, color: getNodeColor(selected), fontWeight: 600, textTransform: 'uppercase' }}>{selected.status}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: '-0.3px' }}>{selected.label}</div>
+                <div style={{ fontSize: 12, color: getNodeColor(selected), fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{selected.status}</div>
               </div>
             </div>
-            {[
-              { label: 'Health Score', value: `${selected.health}%`, color: getNodeColor(selected) },
-              { label: 'Response Time', value: `${selected.responseMs}ms`, color: 'var(--text-primary)' },
-              { label: 'Load', value: `${selected.load}%`, color: selected.load > 80 ? '#ef4444' : '#22c55e' },
-            ].map(item => (
-              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.label}</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: item.color }}>{item.value}</span>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { label: 'Health Score', value: `${selected.health}%`, color: getNodeColor(selected) },
+                { label: 'Response Time', value: `${selected.responseMs}ms`, color: 'var(--text-primary)' },
+                { label: 'System Load', value: `${selected.load}%`, color: selected.load > 80 ? '#f43f5e' : '#10b981' },
+              ].map(item => (
+                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>{item.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: item.color }}>{item.value}</span>
+                </div>
+              ))}
+            </div>
             {/* Load bar */}
-            <div style={{ background: 'var(--bg-secondary)', height: 6, borderRadius: 6, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${selected.load}%`, background: selected.load > 80 ? 'linear-gradient(90deg, #f59e0b, #ef4444)' : 'linear-gradient(90deg, #22c55e, #16a34a)', borderRadius: 6, transition: 'width 0.5s' }} />
+            <div style={{ marginTop: 16 }}>
+              <div style={{ background: 'var(--bg-secondary)', height: 8, borderRadius: 8, overflow: 'hidden', marginBottom: 6 }}>
+                <div style={{ height: '100%', width: `${selected.load}%`, background: selected.load > 80 ? 'linear-gradient(90deg, #f59e0b, #f43f5e)' : 'linear-gradient(90deg, #10b981, #22c55e)', borderRadius: 8, transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>CPU / Memory Utilization</div>
             </div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6 }}>CPU / Memory Load</div>
           </div>
         ) : (
-          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 18, textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
-            Click a node to inspect
+          <div style={{ background: 'var(--bg-card)', border: '1px dashed var(--border)', borderRadius: 20, padding: 32, textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, fontWeight: 500 }}>
+            Select a node to view its health details.
           </div>
         )}
 
         {/* Legend */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status Legend</div>
-          {[
-            { color: '#22c55e', label: 'Healthy (>85%)' },
-            { color: '#f59e0b', label: 'Degraded (60–85%)' },
-            { color: '#ef4444', label: 'Critical (<60%)' },
-          ].map(l => (
-            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: l.color }} />
-              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{l.label}</span>
-            </div>
-          ))}
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: 20 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status Legend</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { color: '#10b981', label: 'Healthy (Optimal)' },
+              { color: '#f59e0b', label: 'Degraded (Warning)' },
+              { color: '#f43f5e', label: 'Critical (Action Needed)' },
+            ].map(l => (
+              <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 12, height: 12, borderRadius: '50%', background: l.color, boxShadow: `0 0 8px ${l.color}80` }} />
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{l.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Summary stats */}
         {infra.nodes.length > 0 && (
-          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Twin Summary</div>
-            {[
-              { label: 'Healthy Nodes', val: infra.nodes.filter(n => n.status === 'healthy').length, color: '#22c55e' },
-              { label: 'Degraded', val: infra.nodes.filter(n => n.status === 'degraded').length, color: '#f59e0b' },
-              { label: 'Down', val: infra.nodes.filter(n => n.status === 'down').length, color: '#ef4444' },
-            ].map(s => (
-              <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.label}</span>
-                <span style={{ fontSize: 14, fontWeight: 700, color: s.color }}>{s.val}</span>
-              </div>
-            ))}
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: 20 }}>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Twin Summary</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                { label: 'Healthy Nodes', val: infra.nodes.filter(n => n.status === 'healthy').length, color: '#10b981' },
+                { label: 'Degraded Nodes', val: infra.nodes.filter(n => n.status === 'degraded').length, color: '#f59e0b' },
+                { label: 'Critical Nodes', val: infra.nodes.filter(n => n.status === 'down').length, color: '#f43f5e' },
+              ].map(s => (
+                <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{s.label}</span>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: s.color }}>{s.val}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

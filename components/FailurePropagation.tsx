@@ -56,7 +56,7 @@ function buildGraph(monitors: Array<{id: string; name: string; url: string; late
 }
 
 function nodeColor(status: GraphNode['status']): string {
-  return status === 'down' ? '#ef4444' : status === 'degraded' ? '#f59e0b' : '#22c55e'
+  return status === 'down' ? '#f43f5e' : status === 'degraded' ? '#f59e0b' : '#10b981'
 }
 
 // BFS to get propagation blast radius  
@@ -112,24 +112,24 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
   const affectedNodes = graph.nodes.filter(n => blastRadius.has(n.id))
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20, alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24, alignItems: 'start' }}>
       {/* Graph canvas */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Failure Propagation Graph</span>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Click a node to simulate blast radius</span>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 800, letterSpacing: '-0.3px' }}>Live Connection Map</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>Select a node to view impact radius</span>
         </div>
         <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
           {/* Background grid */}
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="1"/>
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1"/>
             </pattern>
             {/* Pulse gradients for down nodes */}
             {graph.nodes.filter(n => n.status === 'down').map(n => (
               <radialGradient key={`pulse-${n.id}`} id={`pulse-${n.id}`} cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
               </radialGradient>
             ))}
           </defs>
@@ -137,13 +137,14 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
 
           {/* Pulse rings from failing nodes */}
           {graph.nodes.filter(n => n.status === 'down').map(n => {
-            const pulseR = 30 + (Math.sin(pulsePhase) + 1) * 30
+            const pulseR = 34 + (Math.sin(pulsePhase) + 1) * 30
             return (
               <circle key={`pulse-outer-${n.id}`}
                 cx={n.x} cy={n.y} r={pulseR}
-                fill="none" stroke="#ef4444"
-                strokeWidth={2}
-                opacity={Math.max(0, 0.5 - (pulseR - 30) / 60)}
+                fill="none" stroke="#f43f5e"
+                strokeWidth={2.5}
+                opacity={Math.max(0, 0.5 - (pulseR - 34) / 60)}
+                style={{ transition: 'r 0.1s linear' }}
               />
             )
           })}
@@ -156,7 +157,7 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
             const isInBlast = selected && (blastRadius.has(edge.from) || blastRadius.has(edge.to)) && (edge.from === selected || edge.to === selected || blastRadius.has(edge.from) && blastRadius.has(edge.to))
             const fromDown = from.status === 'down'
             const toDown = to.status === 'down'
-            const edgeColor = (fromDown || toDown) ? '#ef4444' : isInBlast ? '#f59e0b' : 'rgba(255,255,255,0.08)'
+            const edgeColor = (fromDown || toDown) ? '#f43f5e' : isInBlast ? '#f59e0b' : 'rgba(255,255,255,0.06)'
             // Animated propagation packet
             const animPct = ((tick * 0.02 + i * 0.13) % 1)
             const px = from.x + (to.x - from.x) * animPct
@@ -166,13 +167,14 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
               <g key={`edge-${edge.from}-${edge.to}`}>
                 <line x1={from.x} y1={from.y} x2={to.x} y2={to.y}
                   stroke={edgeColor}
-                  strokeWidth={isInBlast ? 2 : 1}
-                  strokeDasharray={fromDown || toDown ? '6 4' : 'none'}
-                  opacity={isInBlast ? 0.8 : 0.3}
+                  strokeWidth={isInBlast ? 2.5 : 2}
+                  strokeDasharray={fromDown || toDown ? '6 6' : 'none'}
+                  opacity={isInBlast ? 0.9 : 0.4}
+                  style={{ transition: 'stroke 0.3s' }}
                 />
                 {(fromDown || toDown || isInBlast) && (
-                  <circle cx={px} cy={py} r={3}
-                    fill={fromDown || toDown ? '#ef4444' : '#f59e0b'}
+                  <circle cx={px} cy={py} r={3.5}
+                    fill={fromDown || toDown ? '#f43f5e' : '#f59e0b'}
                     opacity={0.9}
                   />
                 )}
@@ -185,35 +187,37 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
             const isSelected = node.id === selected
             const isAffected = blastRadius.has(node.id)
             const color = nodeColor(node.status)
-            const r = isSelected ? 28 : 22
+            const r = isSelected ? 32 : 24
 
             return (
-              <g key={node.id} style={{ cursor: 'pointer' }} onClick={() => handleNodeClick(node.id)}>
+              <g key={node.id} style={{ cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => handleNodeClick(node.id)}>
                 {/* Affected glow */}
                 {isAffected && (
-                  <circle cx={node.x} cy={node.y} r={r + 12}
+                  <circle cx={node.x} cy={node.y} r={r + 14}
                     fill={`${color}15`}
                     stroke={color}
-                    strokeWidth={1}
-                    opacity={0.6}
+                    strokeWidth={1.5}
+                    opacity={0.7}
+                    style={{ transition: 'r 0.3s, fill 0.3s' }}
                   />
                 )}
                 {/* Main circle */}
                 <circle cx={node.x} cy={node.y} r={r}
-                  fill={`${color}22`}
-                  stroke={isSelected ? 'white' : color}
-                  strokeWidth={isSelected ? 2.5 : 2}
+                  fill={`${color}2A`}
+                  stroke={isSelected ? '#ffffff' : color}
+                  strokeWidth={isSelected ? 3 : 2.5}
+                  style={{ transition: 'stroke 0.3s, r 0.3s' }}
                 />
                 {/* Status icon */}
                 <text x={node.x} y={node.y} textAnchor="middle" dominantBaseline="central"
-                  fontSize={isSelected ? 14 : 12}>
+                  fontSize={isSelected ? 16 : 14}>
                   {node.status === 'down' ? '💥' : node.status === 'degraded' ? '⚠️' : '✅'}
                 </text>
                 {/* Node name */}
-                <text x={node.x} y={node.y + r + 14}
-                  textAnchor="middle" fontSize={9}
-                  fill="rgba(255,255,255,0.7)" fontWeight="600">
-                  {node.name.length > 16 ? node.name.slice(0, 15) + '…' : node.name}
+                <text x={node.x} y={node.y + r + 18}
+                  textAnchor="middle" fontSize={11}
+                  fill="rgba(255,255,255,0.8)" fontWeight="700">
+                  {node.name.length > 20 ? node.name.slice(0, 19) + '…' : node.name}
                 </text>
               </g>
             )
@@ -222,64 +226,66 @@ export default function FailurePropagation({ monitors }: { monitors: Array<{id: 
       </div>
 
       {/* Sidebar */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {selectedNode ? (
-          <div style={{ background: 'var(--bg-card)', border: `1px solid ${nodeColor(selectedNode.status)}40`, borderRadius: 14, padding: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{selectedNode.name}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 12, wordBreak: 'break-all' }}>{selectedNode.url}</div>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: nodeColor(selectedNode.status), background: `${nodeColor(selectedNode.status)}18`, border: `1px solid ${nodeColor(selectedNode.status)}40`, borderRadius: 6, padding: '3px 8px', textTransform: 'uppercase' }}>
+          <div style={{ background: 'var(--bg-card)', border: `1px solid ${nodeColor(selectedNode.status)}40`, borderRadius: 20, padding: 24, boxShadow: `0 8px 32px ${nodeColor(selectedNode.status)}10` }}>
+            <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.3px' }}>{selectedNode.name}</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16, wordBreak: 'break-all', fontWeight: 500 }}>{selectedNode.url}</div>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: nodeColor(selectedNode.status), background: `${nodeColor(selectedNode.status)}15`, border: `1px solid ${nodeColor(selectedNode.status)}30`, borderRadius: 100, padding: '4px 12px', textTransform: 'uppercase' }}>
                 {selectedNode.status}
               </span>
               {selectedNode.status === 'down' && (
-                <span style={{ fontSize: 11, color: '#ef4444', background: 'rgba(239,68,68,0.1)', borderRadius: 6, padding: '3px 8px' }}>
-                  ⚠️ Origin of failure
+                <span style={{ fontSize: 12, color: '#f43f5e', background: 'rgba(244,63,94,0.1)', borderRadius: 100, padding: '4px 12px', fontWeight: 600 }}>
+                  ⚠️ Origin
                 </span>
               )}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
-              Risk Score: <strong style={{ color: selectedNode.risk > 30 ? '#ef4444' : '#22c55e' }}>{selectedNode.risk}/100</strong>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8, fontWeight: 500, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Risk Score</span>
+              <strong style={{ color: selectedNode.risk > 30 ? '#f43f5e' : '#10b981', fontSize: 16, fontWeight: 800 }}>{selectedNode.risk}/100</strong>
             </div>
           </div>
         ) : (
-          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 18, textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
-            Click a node to simulate failure propagation
+          <div style={{ background: 'var(--bg-card)', border: '1px dashed var(--border)', borderRadius: 20, padding: 32, textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, fontWeight: 500 }}>
+            Click a node to simulate propagation paths.
           </div>
         )}
 
         {/* Blast radius list */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
-            💥 Blast Radius ({affectedNodes.length} services)
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: 20 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>
+            💥 Impact Radius ({affectedNodes.length})
           </div>
           {affectedNodes.length === 0 ? (
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Select a node to see affected services</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Select a node to see affected services</div>
           ) : (
-            affectedNodes.map(n => (
-              <div key={n.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: nodeColor(n.status), flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: 'var(--text-secondary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.name}</span>
-                <span style={{ fontSize: 10, color: nodeColor(n.status), fontWeight: 600, textTransform: 'uppercase' }}>{n.status}</span>
-              </div>
-            ))
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {affectedNodes.map(n => (
+                <div key={n.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: 'var(--bg-secondary)', borderRadius: 12 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: nodeColor(n.status), flexShrink: 0, boxShadow: `0 0 8px ${nodeColor(n.status)}60` }} />
+                  <span style={{ fontSize: 13, color: 'var(--text-secondary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>{n.name}</span>
+                  <span style={{ fontSize: 11, color: nodeColor(n.status), fontWeight: 700, textTransform: 'uppercase' }}>{n.status}</span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
         {/* Legend */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, padding: 14 }}>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Legend</div>
-          {[
-            { color: '#22c55e', label: '✅ Operational', emoji: '' },
-            { color: '#f59e0b', label: '⚠️ Degraded', emoji: '' },
-            { color: '#ef4444', label: '💥 Down / Failing', emoji: '' },
-          ].map(l => (
-            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: l.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{l.label}</span>
-            </div>
-          ))}
-          <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-            Dashed lines = degraded connections. Animated packets show live data flow.
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: 20 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Legend</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { color: '#10b981', label: '✅ Operational' },
+              { color: '#f59e0b', label: '⚠️ Degraded' },
+              { color: '#f43f5e', label: '💥 Down / Failing' },
+            ].map(l => (
+              <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 12, height: 12, borderRadius: '50%', background: l.color, flexShrink: 0, boxShadow: `0 0 8px ${l.color}60` }} />
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{l.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

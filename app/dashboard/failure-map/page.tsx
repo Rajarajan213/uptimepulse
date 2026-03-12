@@ -34,27 +34,27 @@ export default function FailureMapPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       <header style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)', padding: '0 32px', position: 'sticky', top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1300, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 13 }}>
-            <ArrowLeft size={14} /> Dashboard
+        <div style={{ maxWidth: 1300, margin: '0 auto', height: 72, display: 'flex', alignItems: 'center', gap: 20 }}>
+          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
+            <ArrowLeft size={16} /> Dashboard
           </Link>
-          <div style={{ width: 1, height: 18, background: 'var(--border)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #ef4444, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GitFork size={16} color="white" />
+          <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #f43f5e, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(244, 63, 94, 0.2)' }}>
+              <GitFork size={20} color="white" />
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>Failure Propagation Map</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Blast radius simulation · Cascade analysis</div>
+              <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.3px', color: 'var(--text-primary)' }}>Failure Propagation Map</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>Blast radius simulation · Cascade analysis</div>
             </div>
           </div>
         </div>
       </header>
-      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '32px' }}>
+      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '40px 32px' }}>
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20 }}>
-            <div className="skeleton" style={{ height: 460, borderRadius: 16 }} />
-            <div className="skeleton" style={{ height: 460, borderRadius: 16 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24 }}>
+            <div className="skeleton" style={{ height: 500, borderRadius: 24 }} />
+            <div className="skeleton" style={{ height: 500, borderRadius: 24 }} />
           </div>
         ) : monitors.length < 2 ? (
           <div style={{ textAlign: 'center', padding: '80px 32px' }}>

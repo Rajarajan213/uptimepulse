@@ -35,27 +35,27 @@ export default function DigitalTwinPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       <header style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)', padding: '0 32px', position: 'sticky', top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1300, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 13 }}>
-            <ArrowLeft size={14} /> Dashboard
+        <div style={{ maxWidth: 1300, margin: '0 auto', height: 72, display: 'flex', alignItems: 'center', gap: 20 }}>
+          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
+            <ArrowLeft size={16} /> Dashboard
           </Link>
-          <div style={{ width: 1, height: 18, background: 'var(--border)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Cpu size={16} color="white" />
+          <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #3b82f6, #0ea5e9)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)' }}>
+              <Cpu size={20} color="white" />
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>Digital Twin Simulation</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Live infrastructure model derived from your monitors</div>
+              <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.3px', color: 'var(--text-primary)' }}>Digital Twin Simulation</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>Live infrastructure model derived from your monitors</div>
             </div>
           </div>
         </div>
       </header>
-      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '32px' }}>
+      <main style={{ maxWidth: 1300, margin: '0 auto', padding: '40px 32px' }}>
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20 }}>
-            <div className="skeleton" style={{ height: 440, borderRadius: 16 }} />
-            <div className="skeleton" style={{ height: 440, borderRadius: 16 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24 }}>
+            <div className="skeleton" style={{ height: 480, borderRadius: 24 }} />
+            <div className="skeleton" style={{ height: 480, borderRadius: 24 }} />
           </div>
         ) : (
           <DigitalTwin monitors={monitors} />
