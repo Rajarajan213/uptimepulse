@@ -19,6 +19,7 @@
     "nodemailer": "^8.0.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-globe.gl": "^2.37.0",
     "recharts": "^3.8.0"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { Monitor, Heartbeat } from '@/lib/supabase'
-import { Activity, Plus, LogOut, RefreshCw, Globe, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight, Trophy } from 'lucide-react'
+import { Activity, Plus, LogOut, RefreshCw, Globe, Globe2, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight, Trophy } from 'lucide-react'
 import AddMonitorModal from '@/components/AddMonitorModal'
 import MonitorCard from '@/components/MonitorCard'
 
@@ -311,6 +311,17 @@ export default function DashboardPage() {
                   desc: 'Turn uptime into a skill. Earn XP, ranks, streaks, badges and fight downtime boss battles.',
                   badge: 'LIVE',
                   badgeColor: '#f97316',
+                },
+                {
+                  href: '/dashboard/globe',
+                  icon: <Globe2 size={24} />,
+                  gradient: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(99,102,241,0.06))',
+                  border: 'rgba(56,189,248,0.28)',
+                  iconBg: 'linear-gradient(135deg, #38bdf8, #6366f1)',
+                  title: '🌍 Live Location Map',
+                  desc: 'See your monitors on a live 3D globe. Your location is pinpointed with animated arcs to each site.',
+                  badge: '3D Globe',
+                  badgeColor: '#38bdf8',
                 },
                 {
                   href: '/dashboard/ai-healing',
