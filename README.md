@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UptimePulse 🟢
 
-## Getting Started
+> Real-time website uptime monitoring with AI-powered features, gamification, and instant alerts.
 
-First, run the development server:
+[![Status](https://uptimepulse-rd95.vercel.app/api/badge/bd9775da-38c1-4c41-b396-ea1f6a7e19aa)](https://uptimepulse-rd95.vercel.app/dashboard/monitor/bd9775da-38c1-4c41-b396-ea1f6a7e19aa)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://uptimepulse-rd95.vercel.app)
+[![Next.js](https://img.shields.io/badge/Built%20with-Next.js-black?logo=nextdotjs)](https://nextjs.org)
+
+---
+
+## 🌐 Live App
+
+**[https://uptimepulse-rd95.vercel.app](https://uptimepulse-rd95.vercel.app)**
+
+---
+
+## ✨ Features
+
+- 📡 **Website Monitoring** — Checks every 60 seconds, alerts you instantly when something goes down
+- 🎮 **Reliability Game** — Earn XP, ranks (🪵Bronze → 👑Legendary), streaks, achievements & boss battles
+- 🤖 **AI Self-Healing** — Auto-detects failures and triggers fixes (cache purge, DNS failover)
+- 🧬 **Digital Twin** — Live architectural map of your infrastructure
+- 👥 **Real User Monitoring** — Track Core Web Vitals and user experience
+- ⚠️ **AI Risk Score** — Unified health grade (0–100) based on volatility & trends
+- 🗺️ **Failure Propagation Map** — See the blast radius of any outage
+
+---
+
+## 🚀 Getting Started (Local Dev)
 
 ```bash
+# Install dependencies
+npm install
+
+# Add environment variables
+cp .env.local.example .env.local
+# Fill in your Supabase URL + keys
+
+# Run the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Database | Supabase (PostgreSQL + Auth) |
+| Styling | Vanilla CSS + Glassmorphism |
+| Deployment | Vercel |
+| Monitoring | Custom cron + heartbeat system |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📡 Status Badge
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Embed the live status badge on your website or README:
 
-## Deploy on Vercel
+```markdown
+[![Status](https://uptimepulse-rd95.vercel.app/api/badge/bd9775da-38c1-4c41-b396-ea1f6a7e19aa)](https://uptimepulse-rd95.vercel.app/dashboard/monitor/bd9775da-38c1-4c41-b396-ea1f6a7e19aa)
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+
+MIT © 2026 UptimePulse
