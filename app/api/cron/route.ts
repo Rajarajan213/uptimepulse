@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { pingUrl } from '@/lib/monitoring'
-import { sendDownAlert, sendUpAlert } from '@/lib/notifications'
+import { sendDownAlert, sendUpAlert, sendRiskAlert } from '@/lib/notifications'
 
 export async function GET(req: NextRequest) {
   const secret = req.headers.get('x-cron-secret')
@@ -98,7 +98,42 @@ export async function GET(req: NextRequest) {
         }
       }
 
-      results.push({ id: monitor.id, name: monitor.name, ...pingResult })
+      // Check Risk Score
+      const { data: h24 } = await admin.from('heartbeats').select('status, response_time').eq('monitor_id', monitor.id).gte('created_at', new Date(Date.now() - 86400000).toISOString())
+      const up = h24?.filter((h: {status: string}) => h.status === 'UP').length || 0
+      const total = h24?.length || 0
+      const uptime = total > 0 ? (up / total) * 100 : 100
+      const avg = h24 && h24.length > 0 ? h24.reduce((a: number, h: {response_time: number|null}) => a + (h.response_time || 0), 0) / h24.length : pingResult.response_time
+      
+      const uptimeFactor = Math.max(0, 100 - uptime * 0.95)
+      const respFactor = Math.min(100, (avg / 2000) * 100)
+      const incidentFactor = pingResult.status === 'DOWN' ? 80 : uptime < 98 ? 40 : 10
+      const trendFactor = pingResult.status === 'DOWN' ? 70 : uptime < 99 ? 35 : 5
+      
+      const riskScore = Math.round(uptimeFactor * 0.35 + respFactor * 0.25 + incidentFactor * 0.25 + trendFactor * 0.15)
+      
+      // If critical risk (>= 70) and it wasn't critical previously, or we want to alert every time...
+      // For demonstration, we'll alert if score >= 70
+      if (riskScore >= 70 && pingResult.status === 'UP') {
+        const { data: userData } = await admin.auth.admin.getUserById(monitor.user_id)
+        if (userData?.user?.email) {
+          const reasons = []
+          if (uptime < 99) reasons.push(`Low 24h Uptime: ${uptime.toFixed(2)}%`)
+          if (avg > 1000) reasons.push(`High average response time: ${Math.round(avg)}ms`)
+          if (incidentFactor >= 40) reasons.push(`Recent incidents detected`)
+          
+          await sendRiskAlert({
+            to: userData.user.email,
+            monitorName: monitor.name,
+            url: monitor.url,
+            riskScore,
+            reasons: reasons.length > 0 ? reasons : ['General degraded performance patterns'],
+            timestamp: new Date().toISOString(),
+          }).catch(() => {})
+        }
+      }
+
+      results.push({ id: monitor.id, name: monitor.name, ...pingResult, riskScore })
     } catch (err) {
       console.error(`Failed to check ${monitor.url}:`, err)
     }
