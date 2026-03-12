@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { Monitor, Heartbeat } from '@/lib/supabase'
-import { Activity, Plus, LogOut, RefreshCw, Globe, Zap, TrendingUp } from 'lucide-react'
+import { Activity, Plus, LogOut, RefreshCw, Globe, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight } from 'lucide-react'
 import AddMonitorModal from '@/components/AddMonitorModal'
 import MonitorCard from '@/components/MonitorCard'
 
@@ -180,6 +181,116 @@ export default function DashboardPage() {
             ))}
           </div>
         )}
+        {/* AI Features Section */}
+        <div style={{ marginTop: 48 }}>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-blue)', animation: 'glow-pulse 2s infinite' }} />
+              <h2 style={{ fontSize: 20, fontWeight: 800 }}>🚀 AI-Powered Features</h2>
+              <span style={{ fontSize: 11, background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2))', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 6, padding: '2px 8px', color: 'var(--accent-blue)', fontWeight: 700 }}>NEW</span>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Intelligent reliability tools that go beyond simple uptime checking</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+            {[
+              {
+                href: '/dashboard/ai-healing',
+                icon: <Shield size={22} />,
+                gradient: 'linear-gradient(135deg, #22c55e20, #16a34a10)',
+                border: 'rgba(34,197,94,0.25)',
+                iconBg: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                title: 'AI Self-Healing System',
+                desc: 'Auto-remediation engine that detects failures and triggers healing actions — cache purge, DNS failover, service restart.',
+                badge: '🟢 Active',
+                badgeColor: '#22c55e',
+              },
+              {
+                href: '/dashboard/digital-twin',
+                icon: <Cpu size={22} />,
+                gradient: 'linear-gradient(135deg, #3b82f620, #06b6d410)',
+                border: 'rgba(59,130,246,0.25)',
+                iconBg: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                title: 'Digital Twin Simulation',
+                desc: 'Live SVG infrastructure map with animated data flows. Visualize CDN, API, DB, Auth health in real time.',
+                badge: '🔵 Live',
+                badgeColor: '#3b82f6',
+              },
+              {
+                href: '/dashboard/rum',
+                icon: <Users size={22} />,
+                gradient: 'linear-gradient(135deg, #8b5cf620, #ec489910)',
+                border: 'rgba(139,92,246,0.25)',
+                iconBg: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+                title: 'Real User Monitoring',
+                desc: 'Core Web Vitals (LCP, FID, CLS), geographic sessions, browser breakdown, and 24h load timeline.',
+                badge: '👥 RUM',
+                badgeColor: '#8b5cf6',
+              },
+              {
+                href: '/dashboard/risk-score',
+                icon: <AlertTriangle size={22} />,
+                gradient: 'linear-gradient(135deg, #ef444420, #f59e0b10)',
+                border: 'rgba(239,68,68,0.25)',
+                iconBg: 'linear-gradient(135deg, #ef4444, #f59e0b)',
+                title: 'AI Website Risk Score',
+                desc: 'AI-computed 0–100 risk score per monitor. Breakdown by uptime, response time, incident frequency, and trend.',
+                badge: '⚠️ AI',
+                badgeColor: '#ef4444',
+              },
+              {
+                href: '/dashboard/failure-map',
+                icon: <GitFork size={22} />,
+                gradient: 'linear-gradient(135deg, #ef444420, #8b5cf610)',
+                border: 'rgba(139,92,246,0.25)',
+                iconBg: 'linear-gradient(135deg, #ef4444, #8b5cf6)',
+                title: 'Failure Propagation Map',
+                desc: 'Interactive graph showing how failures cascade across dependent services. Click any node to see blast radius.',
+                badge: '💥 Cascade',
+                badgeColor: '#8b5cf6',
+              },
+            ].map(f => (
+              <Link key={f.href} href={f.href} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: f.gradient,
+                  border: `1px solid ${f.border}`,
+                  borderRadius: 16,
+                  padding: '22px 22px 18px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+                  className="ai-feature-card"
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLDivElement
+                    el.style.transform = 'translateY(-2px)'
+                    el.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLDivElement
+                    el.style.transform = 'none'
+                    el.style.boxShadow = 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: f.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                      {f.icon}
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: f.badgeColor, background: `${f.badgeColor}15`, border: `1px solid ${f.badgeColor}30`, borderRadius: 6, padding: '3px 8px' }}>
+                      {f.badge}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>{f.title}</h3>
+                  <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.7, flex: 1 }}>{f.desc}</p>
+                  <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--accent-blue)', fontWeight: 600 }}>
+                    Open feature <ChevronRight size={14} />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </main>
 
       {showAdd && (

@@ -5,16 +5,10 @@ let _client: SupabaseClient | null = null
 
 export function getSupabase(): SupabaseClient {
   if (!_client) {
-    let url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    
-    // Fallback to a valid dummy URL if placeholder is still present
-    // This prevents the "Invalid supabaseUrl" crash and instead allows the normal error handling to catch it
-    if (!url || !url.startsWith('http')) {
-      url = 'https://placeholder.supabase.co'
-    }
-    
-    _client = createClient(url, key || 'placeholder-key')
+    if (!url || !key) throw new Error('Missing Supabase env vars')
+    _client = createClient(url, key)
   }
   return _client
 }

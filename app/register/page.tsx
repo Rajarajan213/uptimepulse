@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [needsEmailConfirm, setNeedsEmailConfirm] = useState(false)
 
   const handleGoogleLogin = async () => {
     setLoading(true)
@@ -43,22 +44,41 @@ export default function RegisterPage() {
     }
     setLoading(true)
 
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) {
       setError(error.message)
       setLoading(false)
     } else {
-      setSuccess(true)
-      setTimeout(() => router.push('/dashboard'), 2000)
+      if (data?.session) {
+        setSuccess(true)
+        setTimeout(() => router.push('/dashboard'), 2000)
+      } else {
+        setNeedsEmailConfirm(true)
+      }
     }
   }
 
   if (success) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
       <div className="fade-in" style={{ textAlign: 'center' }}>
-        <CheckCircle size={64} color="var(--accent-green)" style={{ marginBottom: 20 }} />
+        <CheckCircle size={64} color="var(--accent-green)" style={{ marginBottom: 20, margin: '0 auto' }} />
         <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Account Created!</h2>
         <p style={{ color: 'var(--text-secondary)' }}>Redirecting to your dashboard...</p>
+      </div>
+    </div>
+  )
+
+  if (needsEmailConfirm) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
+      <div className="fade-in" style={{ textAlign: 'center', maxWidth: 400, padding: 24 }}>
+        <Mail size={56} color="var(--accent-blue)" style={{ marginBottom: 20, margin: '0 auto' }} />
+        <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12 }}>Check your email</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 24, lineHeight: 1.6 }}>
+          We sent a verification link to <strong style={{color: 'var(--text-primary)'}}>{email}</strong>. Please click the link to confirm your account before logging in.
+        </p>
+        <Link href="/login" className="btn-primary" style={{ display: 'inline-flex', padding: '12px 24px', textDecoration: 'none' }}>
+          Go to Login
+        </Link>
       </div>
     </div>
   )
