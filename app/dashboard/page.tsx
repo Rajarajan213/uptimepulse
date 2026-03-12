@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { Monitor, Heartbeat } from '@/lib/supabase'
-import { Activity, Plus, LogOut, RefreshCw, Globe, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight } from 'lucide-react'
+import { Activity, Plus, LogOut, RefreshCw, Globe, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight, Trophy } from 'lucide-react'
 import AddMonitorModal from '@/components/AddMonitorModal'
 import MonitorCard from '@/components/MonitorCard'
 
@@ -302,7 +302,19 @@ export default function DashboardPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
               {[
                 {
+                  href: '/dashboard/gamification',
+                  icon: <Trophy size={24} />,
+                  gradient: 'linear-gradient(135deg, rgba(249,115,22,0.14), rgba(168,85,247,0.06))',
+                  border: 'rgba(249,115,22,0.3)',
+                  iconBg: 'linear-gradient(135deg, #f97316, #a855f7)',
+                  title: '🎮 Reliability Game',
+                  desc: 'Turn uptime into a skill. Earn XP, ranks, streaks, badges and fight downtime boss battles.',
+                  badge: 'LIVE',
+                  badgeColor: '#f97316',
+                },
+                {
                   href: '/dashboard/ai-healing',
+
                   icon: <Shield size={24} />,
                   gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.04))',
                   border: 'rgba(16,185,129,0.25)',

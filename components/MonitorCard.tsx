@@ -5,6 +5,7 @@ import type { Monitor } from '@/lib/supabase'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Trash2, ChevronRight, Clock, TrendingUp, RefreshCw } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { getRank } from '@/lib/gamification'
 
 type Props = {
   monitor: Monitor
@@ -42,6 +43,7 @@ export default function MonitorCard({ monitor, latestStatus, avgResponseTime, up
 
   const statusColor = latestStatus === 'UP' ? '#22c55e' : latestStatus === 'DOWN' ? '#ef4444' : '#94a3b8'
   const uptimePct = uptimePercentage !== null && uptimePercentage !== undefined ? uptimePercentage : null
+  const rank = getRank(uptimePct)
 
   return (
     <div
@@ -72,7 +74,16 @@ export default function MonitorCard({ monitor, latestStatus, avgResponseTime, up
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
+          {/* Rank badge */}
+          <div title={`${rank.tier} — ${rank.reason}`} style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            background: `${rank.color}15`, border: `1px solid ${rank.color}35`,
+            borderRadius: 10, padding: '4px 8px', cursor: 'default'
+          }}>
+            <span style={{ fontSize: 16, lineHeight: 1 }}>{rank.emoji}</span>
+            <span style={{ fontSize: 9, fontWeight: 700, color: rank.color, letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: 1 }}>{rank.tier}</span>
+          </div>
           <button
             onClick={handleManualCheck}
             title="Refresh monitor status"
