@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { Monitor, Heartbeat } from '@/lib/supabase'
-import { Activity, Plus, LogOut, RefreshCw, Globe, Globe2, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight, Trophy } from 'lucide-react'
+import { Activity, Plus, LogOut, RefreshCw, Globe, Globe2, Zap, TrendingUp, Shield, Cpu, Users, AlertTriangle, GitFork, ChevronRight, Trophy, Timer, FlaskConical } from 'lucide-react'
 import AddMonitorModal from '@/components/AddMonitorModal'
 import MonitorCard from '@/components/MonitorCard'
 
@@ -378,6 +378,28 @@ export default function DashboardPage() {
                   desc: 'See the blast radius of any outage. Click a service to instantly see what else might be affected downstream.',
                   badge: 'Cascade Analysis',
                   badgeColor: '#8b5cf6',
+                },
+                {
+                  href: '/dashboard/adaptive-monitor',
+                  icon: <Timer size={24} />,
+                  gradient: 'linear-gradient(135deg, rgba(56,189,248,0.1), rgba(99,102,241,0.04))',
+                  border: 'rgba(56,189,248,0.25)',
+                  iconBg: 'linear-gradient(135deg, #38bdf8, #6366f1)',
+                  title: '⏱ Adaptive Monitoring',
+                  desc: 'Smart health-check frequency that adapts in real-time — faster during errors, slower when stable to save resources.',
+                  badge: 'Dynamic Frequency',
+                  badgeColor: '#38bdf8',
+                },
+                {
+                  href: '/dashboard/chaos-testing',
+                  icon: <FlaskConical size={24} />,
+                  gradient: 'linear-gradient(135deg, rgba(239,68,68,0.1), rgba(168,85,247,0.04))',
+                  border: 'rgba(239,68,68,0.25)',
+                  iconBg: 'linear-gradient(135deg, #ef4444, #a855f7)',
+                  title: '💥 Chaos Testing Lab',
+                  desc: 'Intentionally inject failures to verify your system detects outages, fires alerts, and auto-recovers correctly.',
+                  badge: 'Failure Injection',
+                  badgeColor: '#ef4444',
                 },
               ].map(f => (
                 <Link key={f.href} href={f.href} style={{ textDecoration: 'none' }}>
